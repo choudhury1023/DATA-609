@@ -1,0 +1,197 @@
+---
+title: "DATA 609 HW Week 1 & 2"
+author: "Ahsanul Choudhury"
+date: "February 9, 2018"
+output:
+  html_document:
+     theme: cerulean
+     toc: true
+     toc_float:
+       collapsed: false
+       smooth_scroll: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Week 1
+
+## Page 8: #10
+
+**Your grandparents have an annuity. The value of the annuity increases each month by an automatic deposit of 1% interest on the previous month's balance. Your grandparents withdraw $1000 at the beginning of each month for living expenses. Currently they have $50,000 in the annuity. Model the annuity with a dynamical system. Will the annuity run out of money? When?**
+
+***Solution***
+
+Let $a_n$ be the value of account after $n$ months
+
+$a_{n+1}=1.01 \times a_n-1000$
+
+$a_0 = 50000$
+
+```{r annuity, echo=TRUE}
+bal <- 50000
+n <- 0
+df <- data.frame(month = n, balance = bal)
+
+# while loop until balance goes below $1000
+while(bal > 1000){
+  bal <- 1.01 * bal - 1000
+  n <- n + 1
+  df <- rbind(df, data.frame(month = n, balance = bal))
+}
+knitr::kable(df)
+plot(df,type = "o", col = "red", main = "Grandparent's Annuity")
+```
+
+Annuity runs out in month `r (n)`
+
+***
+
+## Page 17: #9
+
+**The data in the accompanying table show the speed $n$ (in increments of 5 mph) of an automobile and the associated distance $a_n$ in feet required to stop it once the brakes are applied. For instance, $n = 6$ (representing 6 × 5 = 30 mph) requires a stopping distances of $a_6 = 47 ft$.**
+
+a.   **Calculate and plot the change $\Delta a_n$ versus nn. Does the graph reasonably approximate a linear relationship?**
+
+b.   **Based on your conclusions in part (a), find a difference equation model for the stopping distance data. Test your model by plotting the errors in the predicted values against $n$. Discuss the appropriateness of the model.**
+
+**n**|**1**|**2**|**3**|**4**|**5**|**6**|**7**|**8**|**9**|**10**|**11**|**12**|**13**|**14**|**15**|**16**
+:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
+$a_n$|3|6|11|21|32|47|65|87|112|140|171|204|241|282|325|376
+
+
+***Solution***
+
+a.   We know,
+
+$$\Delta a_n = a_{n+1}  - a_n$$
+
+```{r data_table, echo=TRUE}
+n <- (seq(1, 16))
+an <- c(3, 6, 11, 21, 32, 47, 65, 87, 112, 140, 171, 204, 241, 282, 325, 376)
+df <- data.frame(n, an)
+
+# add column with delta_an
+(df$delta_an <- c(diff(an), NA))
+
+# plot
+plot(df$n, df$delta_an, type = "o", xlab = "n", ylab = "delta_an")
+```
+
+Yes, the graph reasonably approximate a linear relationship.
+
+
+b.   
+
+```{r model, echo=TRUE}
+# find intercept using lm fumction
+df.lm <- lm(delta_an ~ n, data = df)
+df.lm$coefficients
+```
+
+The difference equation model for the stopping distance data:
+
+$$\Delta a_{n}= 3.246n - 1.105$$
+
+or,
+
+$$a_{n+1}= a_n + 3.246n - 1.105$$
+
+```{r plot, echo=TRUE}
+# functon for the model
+model <- function(n, an, slope, intercept)
+{
+    est_an <- an + slope * n + intercept
+    return(est_an)
+}
+
+# first observation will stay the same
+n <- 1
+est_an <- 3
+my_est <- 3
+
+# apply model function for remaining observations
+for(i in 2:length(df$an))
+{
+  my_est[i] <- model(n,est_an, df.lm$coefficients[2], df.lm$coefficients[1])
+  n <- n + 1
+  est_an <- my_est[i]
+}
+
+df$est_an <-c(my_est)
+df$est_an <- round(df$est_an, 3)
+df$error <- c(df$an - df$est_an)
+df
+plot(df$n, df$error)
+
+```
+The model may not be appropriate, the errors do not appear to be normal, as the speed increases the error seems to increase aswell.
+
+***
+
+# Week 2
+
+##  Page 69: #12
+
+**A company with a fleet of trucks faces increasing maintenance costs as the age and mileage of the trucks increase**
+
+
+*   Problem you would like to study: Benefit of replacing the fleet with a new on by leasing or financing vs operating with aging fleet. 
+
+*   Variables:
+
+      - Size of the fleet.
+      
+      - Operating cost of current fleet.
+      
+      - Salvage value of current fleet.
+      
+      - Financing cost for new fleet
+       .
+      - Operating cost of new fleet.
+      
+      - Depreciation
+      
+      - Savings on maintenance with new fleet.
+
+*   Variable that may be neglected: For simplicity of the model difference in maintenance based on truck make and model may be neglected.
+
+*   Variables might be considered as constants initially: Size of the fleet and fuel cost may be considered as constants initially.
+
+*   Identify any submodels you would want to study in detail: Submodel I Would like to study is return on investment on each individual truck
+
+*   Identify any data you would want collected: I would like to collect historical data on maintenance with age and mileage.
+
+
+***
+
+## Page 79: #11
+
+$y alpha x^3$
+
+y|0|1|2|6|14|24|37|58|82|114
+:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
+x|1|2|3|4|5|6|7|8|9|10
+
+***Solution***
+
+```{r q11, echo=TRUE}
+y <- c(0,1,2,6,14,24,37,58,82,114)
+x <- c(seq(1,10))
+dfq11 <- data.frame(x,y)
+
+dfq11$x3 <- x^3
+
+dfq11$k <- dfq11$y/dfq11$x3
+
+dfq11$prop <- dfq11$x3 * dfq11$k
+
+dfq11$m_k <- mean(dfq11$k)
+pred <-  dfq11$m_k * dfq11$x3
+
+library(ggplot2)
+ggplot(dfq11) + geom_line(aes(x, y), colour="blue") + geom_line(aes(x, y=pred), colour="red") + labs(title="Proportionality, Blue = Actual, Red = Predicted")
+```
+
+This data set supports the stated proportionality model.
