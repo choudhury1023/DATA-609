@@ -1,0 +1,181 @@
+---
+title: "DATA 609 HW Week 5 & 6"
+author: "Ahsanul Choudhury"
+date: "March 11, 2018"
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 2
+header-includes:
+   - \usepackage{tikz}
+   - \usetikzlibrary{automata, positioning}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Week 5
+
+## Page 228: #1
+
+**Consider a model for the long-term dining behavior of the students at College USA. It is found that 25% of the students who eat at the college's Grease Dining Hall return to eat there again, whereas those who eat at Sweet Dining Hall have a 93% return rate. These are the only two dining halls available on campus, and assume that all students eat at one of these halls. Formulate a model to solve for the long-term percentage of students eating at each hall.**
+
+***Solution***
+
+\begin{tikzpicture}
+    \node[state]             (g) {Grease Dining Hall};
+    \node[state, right=of g] (s) {Sweet Dininf Hall};
+    
+    \draw[every loop]
+        (g) edge[bend right, auto=left]  node {0.75} (s)
+        (s) edge[bend right, auto=right] node {0.7} (g)
+        (g) edge[loop left]              node {0.25} (s)
+        (s) edge[loop right]             node {0.93} (g);
+\end{tikzpicture}
+
+
+Let,
+
+$G_n$ = the percentage of students who eat at Grease Dining Hall in period n 
+
+$S_n$ = the percentage of students who eat at Sweet Dining Hall in period n 
+
+Probabilistic model:
+
+$G_{n+1}$ = 0.25$G_{n}$ + 0.07$S_{n}$ 
+
+$S_{n+1}$ = 0.75$G_{n}$ + 0.93$S_{n}$ 
+
+```{r}
+# Probabilistic model
+g_n <- function(g, s) {
+  .25*g + .07*s
+}
+
+s_n <- function(g, s) {
+  .75*g + .93*s
+}
+
+
+# Start with same probability and run 15 times
+dine <- data.frame(n = 0:15, g = .5, s = .5)
+for (i in 1:15){
+  dine$g[i + 1] <- g_n(dine$g[i], dine$s[i])
+  dine$s[i + 1] <- s_n(dine$g[i], dine$s[i])
+}
+
+knitr::kable(dine)
+
+
+
+library(ggplot2)
+ggplot(dine, aes(n)) + 
+  geom_point(aes(y = g, colour = "Grease Dining Hall")) + geom_point(aes(y = s, color = "Sweet Dining Hall"))  +
+  theme(axis.title.y=element_blank())  + 
+  ylab("Percent of Student") + xlab ("Time")
+  
+```
+
+After 9 iteration we have reached a steady state, `r round(dine$g[10]*100, 2)` percent of student eat at the Grease Dinning Hall and `r round(dine$s[10]*100, 2)` percent of student will eat at the Sweet Dinnig hall.
+
+
+## Page 232: #1
+
+**Consider a stereo with CD player, FM-AM radio tuner, speakers (dual), and power amplifier (PA) components, as displayed with the reliabilities shown below. Determine the system's reliability. What assumptions are required in your model**
+
+![](https://github.com/choudhury1023/DATA-609/raw/master/HW3_Fig1.png)
+
+***Solution***
+
+Parllel system 1 reliability
+
+$R_{s1}(t)$ = 0.95
+
+Parllel system 2 reliability
+
+$R_{s2}$(t) = $R_{cd} + R_{fm-am} -  R_{cd} . R_{fm-am}$ = `r 0.98 + 0.97 -  0.98 * 0.97`
+
+Parllel system 3 reliability
+
+$R_{s3}$(t) = $R_{sp1} + R_{sp2} -  R_{sp1} . R_{sp2}$ = `r 0.99 + 0.99 -  0.99 * 0.99`
+
+Total System reliability
+
+$R_s(t) = R_{s1}(t).R_{s2}(t).R_{s3}(t)$ = `r 0.95 * (0.98 + 0.97 -  0.98 * 0.97) * (0.99 + 0.99 -  0.99 * 0.99)`
+
+
+Assumptions: We assumed there are three parallel systems, 1) the PA system, 2) CD and AM-FM Radio system and, 3) Speaker1 and Speaker2 system. We also assumed in the 2nd and 3rd parallel systems, which have two components each, if one component fails the system will still work.
+
+***
+
+# Week 6
+
+## Page 251: #2
+
+***Nutritional Requirements*** -- **A rancher has determined that the minimum weekly nutritional requirements for an average-sized horse include 40 lb of protein, 20 lb of carbohydrates, and 45 lb of roughage. These are obtained from the following sources in varying amounts at the prices indicated:**
+
+```{r, echo=FALSE}
+source <- c("hay(per bale)","oats(per sack)","feeding blocks(per block)","high-protein cincentrate(per sack)","requirement per horse(per week)")  
+protein <- c(0.5,1,2,6,40)
+carbohydrates <- c(2,4,0.5,1,20)
+roughage <- c(5,2,1,2.5,45)
+cost <- c(1.80,3.5,0.4,1,0)
+
+df <- data.frame(source = source, protein=protein, carbohydrates=carbohydrates, roughage=roughage, cost=cost)
+knitr::kable(df)
+```
+Formulate a mathematical model to determine how to meet the minimum nutritional requirements at minimum cost.
+
+***Solution***
+  
+Objective:
+
+$Minimize \, cost: (1.8\times  Hay) + (3.5\times  Oats) + (0.4\times  FB) + (1.0\times  HPC)$
+
+Subject to following constraints
+
+$Protein: (0.5 \times Hay) + (1 \times Oats) + (2 \times FB) + (6 \times HPC) \geq 40$
+
+$Carbohydrates: (92 \times Hay) + (4 \times Oats) + (0.5 \times FB) + (1 \times HPC) \geq 20$
+
+$Roughage: (5 \times Hay) + (2 \times Oats) + (1 \times FB) + (2.5 \times HPC) \geq 45$
+
+
+
+## Page 264: #6
+
+Solve problem using graphical analysis:
+
+Maximize $10x+35y$
+
+   subject to
+
+$$8x + 6y \leq 48\; (board-feet \,of \,lumber)$$
+$$4x + y \leq 20\;(hours\, of\, capacity)$$
+$$y \leq 5\;(demand)$$
+$$x,y \leq 0\; (nonnegativity)$$
+
+```{r}
+x <- seq(0, 6, by=0.1)
+df1 <- data.frame(x = x, boardfeet = (48-8*x)/6, hours = 20-4*x, demand = 5)
+
+library(reshape2)
+
+df1 <- melt(df1, id.vars="x", value.name="y")
+
+ggplot(df1, aes(x=x, y=y, color=variable)) + geom_line()
+```
+Based on the feasible are in out graph we narrow our solution to possible three intersection points (0,5), (0,8), (2.2,5)
+
+```{r}
+obj_f <- function(x,y){
+  10*x + 35*y
+}
+
+(is1 <- obj_f(0,5))
+(is2 <- obj_f(0,8))
+(is3 <- obj_f(2.2,5))
+```
+
+Objective function is maximized at intersection point (0,8) with a value of 280.
