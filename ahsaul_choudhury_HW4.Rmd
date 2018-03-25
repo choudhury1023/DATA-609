@@ -1,0 +1,160 @@
+---
+title: "DATA 609 HW Week 7 & 8"
+author: "Ahsanul Choudhury"
+date: "March 25, 2018"
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\newpage
+
+# Week 7
+
+## Page 304: #2
+
+The bridges and land masses of a certain city can be modeled with graph G in figure 8.7.
+
+![](https://github.com/choudhury1023/DATA-609/raw/master/Figure%208.7.png)
+
+a. Is G Eulerian? Why or why not?
+
+b. Suppose we relax the requirement of the walk so that the walker need not start and end at the same land mass but still must traverse every bridge exactly once. Is this type of walk possible in a city modeled by the graph in figure 8.7? If so, how? If not, why not?
+
+
+***Solutions***
+
+a.   No, G is not Eulerian. One of the condition to be Eulerian is that each vertex must have even degree, in graph G vertices 2 and 5 have odd degrees.
+
+b.   Yes, it is possible in the city modeled by the graph. There are two odd vertices in the graph, if the walker starts at one odd vertex and end at the other vertex, he or she will be able to traverse every bridge exactly once. 
+
+
+## Page 307: #1
+
+Consider the graph in Figure 8.11.
+
+![](https://github.com/choudhury1023/DATA-609/raw/master/Figure%208.11.png)
+
+a.   Write down the set of edges E(G).
+
+b.   Which edges are incident with vertex b?
+
+c.   Which vertices are adjacent to vertex c ?
+
+d.   Compute deg(a).
+
+e.   Compute |E(G)|.
+
+***Solutions***
+
+a. $$E(G) = \{ab, ae, af, bc, bd, cd, de, ef, fd\}$$
+
+b. $$ab, \;bd \;and \; bc.$$
+
+c.   Vertices $b$ and $d$ are adjacent to vertex $c$.
+
+d. $$deg(a)=3$$
+
+e.   There are 9 edges, therefore
+
+   $$|E(G)| = 9$$
+   
+   
+## Page 320: #10
+
+A basketball coach needs to find a starting lineup for her team. There are five positions that must be filled: point guard (1), shooting guard (2), swing (3), power forward (4), and center (5). Given the the following table, create a graph model and use it to find a feasible starting lineup.
+
+**Table 8.7** Positions players can play
+
+Alice|Bonnie|Courtney|Deb|Ellen|Fay|Gladys|Hermione
+:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
+1,2|1|1,2|3,4,5|2|1|3,4|2,3
+
+***Solution***
+
+```{r lineup, echo=TRUE}
+if (!require('igraph')) (install.packages('igraph'))
+
+df_lineup <- data.frame(Player = c("Alice", "Alice", "Bonnie", "Courtney", "Courtney", "Deb", "Deb", "Deb","Ellen",
+                                   "Fay", "Gladys", "Gladys", "Hermione", "Hermione"), 
+                        Position = c(1, 2, 1, 1, 2, 3, 4, 5, 2, 1, 2, 4, 2, 3), stringsAsFactors = FALSE)
+            
+knitr::kable(df_lineup)
+
+
+graph <- graph.data.frame(df_lineup, directed=FALSE)
+plot(graph)
+```
+
+There are several possible lineups, for position 1 and 2 there are few alternatives. One possible lineup is as follows:
+
+```{r start, echo=FALSE} 
+start <- data.frame(Position=c(1,2,3,4,5), 
+                    Player=c("Bonnie", "Ellen", "Hermoine", "Gladys", "Deb"), stringsAsFactors = FALSE)
+knitr::kable(start)
+```
+
+If Hermione cannot play position 3 then there is no feasible starting line up for the coach, the only other alternative for position 3 is Gladys or Deb. If Gladys plays positon 3 then the coach has only Deb to play both position 4 and 5. If Deb plays position 3 then there will be no one left to play position 5.
+
+
+\newpage
+
+
+# Week 8
+
+## Page 347: #4
+
+We have engaged in a business venture. Assume the probability of success is P(s)=2/5; further assume that if we are successful we make $55,000, and if we are unsuccessful we lose $1750. Find the expected value of the business venture.
+
+***Solution***
+
+Expected value of the business venture,
+
+\begin{eqnarray}
+E(S)&=&\sum_{i=1}^{2}S_iP(S_i)\\
+&= &\frac{2}{5} \times (55,000) + \frac{3}{5} \times (-1,750)\\
+&= &20,950
+\end{eqnarray}
+
+
+## Page 347: #6
+
+Consider a firm handling concessions for a sporting event. The firm's manager needs to know whether to stock up with coffee or cola and is formulating policies for specific weather predictions. A local agreement restricts the firm from selling only one type of beverage. The firm estimates a 1500 profit selling cola if the weather is cold and a 5000 profit of selling cola if the weather is warm. The firm also estimates a 4000 profit selling coffee if it is cold and a 1000 profit selling coffee if the weather is warm. The weather forecast says that there is a 30% chance of a cold front; otherwise, the weather will be warm. Build a decision tree to assist with the decision. What should the firm handling concessions do?
+
+
+***Solution***
+
+ Decision Tree
+![Decission Tree 1](https://github.com/choudhury1023/DATA-609/raw/master/Dicision_tree_1.png)
+
+
+
+$$E(cola) = .7 \times \$5,000 + .3 \times \$ 1,500 = \$3,950$$
+$$E(coffee) = .7 \times \$ 1,000 + .3 \times \$4,000 = \$1,900$$
+
+The firm should sell cola.
+
+
+## Page 355: #3
+
+
+The financial success of a ski resort in Squaw Valley is dependent on the amount of early snowfall in the fall and winter months. If the snowfall is greater than 40 inches, the resort always has a successful ski season. If the snow is between 30 and 40 inches, the resort has a moderate season, and if the snowfall is less than 30 inches, the season is poor, and the resort will lose money. The seasonal snow probabilities from the weather service are displayed in the following table with the expected revenue for the previous 10 seasons. A hotel chain has offered to lease the resort during the winter for 100,000. You must decide whether to operate yourself or lease the resort. Build a decision tree to assist in the decision.
+
+
+***Solution***
+
+![Decission Tree 2](https://github.com/choudhury1023/DATA-609/raw/master/Dicision_tree_2.png)
+
+
+
+$$E(Operate) = (0.4 \times \$28,0000) + (0.2 \times \$100,000) + (0.4 \times -\$40,000) = \$116,000$$
+
+$$E(Lease) = (0.4 \times \$100,000) + (0.2\times \$100,000) + (0.4 \times \$100,000)$$
+
+Based on the desicion tree it makes more financial sense to operate instead of leasing it out to the hotel chain.
+
