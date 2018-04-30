@@ -1,0 +1,210 @@
+---
+title: "DATA 609 HW Week 12 & 13"
+author: "Ahsanul Choudhury"
+date: "April 29, 2018"
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\newpage
+
+# Week 12
+
+## Page 529: #1
+
+
+Verify that the given function pair is a solution to the first-order system.
+
+$x = -e^t, \;\;\; y = e^t$
+
+$\frac{dx}{dt} = -y, \;\;\; \frac{dy}{dt} = -x$
+
+***Solution***
+
+We can verigy the given function pair is a solution to the first-order system by taking derivative of $x$ and $y$ with respect to $t$.
+
+$$ \frac{dx}{dt} = -e^t, y = e^t, \frac{dx}{dt} = -y $$ 
+
+$$ \frac{dy}{dt} = e^t, x = -e^t, \frac{dy}{dt} = -x $$
+
+
+## Page 529: #6
+
+Find and classify the rest points of the given autonomous system.
+
+$\frac{dx}{dt} = -(y-1), \;\;\; \frac{dy}{dt} = x-2$
+
+***Solution***
+
+Rest point is determined by putting, $\frac{dx}{dt} = \frac{dy}{dt} = 0$
+
+the given autonomus system,
+
+$$-(y-1) = 0$$
+$$\Rightarrow y = 1$$
+
+$$x-2 = 0$$
+$$\Rightarrow x = 2$$
+
+The rest point $(2,1)$
+
+Classify: 
+
+Write differential equation in $\frac{dy}{dx}$
+
+$$\frac {dy} {dx} = \frac {\frac {dy} {dt}}  {\frac {dx} {dt} } = \frac {x -2} {-(y -1)}$$
+
+$$\Rightarrow \frac {dy} {dx} - \frac {x -2} {1-y} = 0$$
+
+$$\Rightarrow  (1-y)dy-(x - 2)dx = 0$$
+
+$$\Rightarrow \int (1-y)dy - \int (x - 2)dx  = 0$$
+
+$$\Rightarrow -2y + {y^2} + {x^2}  - 4x - C = 0  \;\;\; (multiplying \:both sides \:  by \ -1)$$
+
+$$\Rightarrow y^2 -2y = - x^2  + 4x + C$$
+Applying $(y - 1)^2 = y^2 -2y +1$
+$\Rightarrow y^2 -2y = (y - 1)^2 - 1$
+
+We get,
+
+$$(y - 1)^2 - 1 = -x^2  + 4x + C\;\;\;Equation\:1$$
+From Equation 1,
+
+$C = (y - 1)^2 - 1 + x^2  - 4x$
+
+$\Rightarrow c= -1 + 4 -8 = -5$
+
+
+$$(y - 1)^2 = -x^2 +4x -4$$
+
+$$\Rightarrow y = \sqrt {-x^2  + 4x -4} - 1$$
+From Equation 1,
+
+$C = (y - 1)^2 - 1 + x^2  - 4x$
+
+$\Rightarrow c= -1 + 4 -8 = -5$
+
+
+## Page 546: #1
+
+Apply the first and second derivative tests to the function $f(y) = \frac{y^a}{e^{by}}$ to show that $y = \frac{a}{b}$ is a unique critical point that yields the relative maximum f(a/b). Show also that f(y) approaches 0 as y tends to infinity.
+
+***Solution***
+
+$$f(y) = \frac{y^a}{e^{by}}$$
+$$\Rightarrow f(y) = {y^a}{e^{-by}}$$
+$$\Rightarrow f'(y) = ay^{a-1} e^{-by} - by^a e^{-by} = 0$$
+$$\Rightarrow ay^{a-1} e^{-by} = by^a e^{-by}$$
+$$\Rightarrow a = by$$
+$$\Rightarrow y = \frac {a}{b}$$
+
+
+$$f''(y) = \frac{d}{dy}(\frac{y^{a-1}(a-by)}{e^{by}})$$
+$$= (a^2-a)y^{a-2}-aby^{a-1}$$
+$$= \frac{y^{a-2}(a^2-a-aby)e^{by}-by^{a-1}(a-by)e^{by}}{e^{2by}}$$
+$$= \frac{y^{a-2}(a^2-a-2aby+b^2y^2)}{e^{by}}$$
+$$=\frac{(\frac{a}{b})^{a-2}(a^2-a-2ab\frac{a}{b}+b^2\frac{a^2}{b^2})}{e^{b\frac{a}{b}}}\;\;\;\;(Replace\: y \:with \:\frac{a}{b})$$
+$$=\frac{-a^{a-1}}{b^{a-2}e^a} \;\;\;(The \: sign \:of \:this \:can \:not \:be \:determined)$$
+
+Show that f(y) approaches 0 as y tends to infinity.
+
+$$
+\lim_{y \rightarrow\infty}f(y)=\lim_{y \rightarrow\infty}y^a/e^{by}\\
+\lim_{y \rightarrow\infty}\frac{e^{a~lny}}{e^{by}}
+$$
+
+We can see  both $y$ and $e^y$ approach infinity as $y$ approaches infinity.
+
+
+
+\newpage
+
+# Week 13
+
+## Page 584: #2
+
+Find the local minimum value of the function
+
+$$f(x,y)=3x^2+6xy+7y^2-2x+4y$$
+
+***Solution***
+
+First, lets calculate the derivative:
+
+$$ \frac{\partial f}{\partial x} = 6x + 6y - 2 $$ 
+
+
+$$ \frac{\partial f}{\partial y} = 6x + 14y + 4 $$
+
+Setting the first derivative with respect to x to 0, we get,
+
+$$ \frac{\partial f}{\partial x} = 6x + 6y - 2 $$ 
+$$ \Rightarrow 6x + 6y - 2 = 0 $$
+
+$$ \Rightarrow x = \frac {1} {3} - y $$
+
+Setting the first derivative with respect to y to 0, substituting x we get,
+
+$$ \frac{\partial f}{\partial y} = 6x + 14y + 4 $$
+
+$$ \Rightarrow 6x + 14y + 4 = 0 $$
+$$ \Rightarrow y= \frac{-3} {4}$$
+
+Substituting y into for x we get,
+
+$$ x = \frac{1+\frac{9}{4}}{3} = \frac{13}{12} $$
+
+
+The local minimum would be at the point $(\frac{13}{12}, \frac{-3}{4})$
+
+## Page 591: #5
+
+Find the hottest point $(x,y,z)$ along the elliptical orbit
+
+$$ 4x^2+y^2+4z^2 = 16 $$
+
+where the temperature function is
+
+$$ T(x, y, z) = 8x^2 +4yz-16z+600 $$
+
+***Solution***
+
+Using Lagrange multipliers:
+
+$$ L(x,y,z,\lambda)=8x^2+4yz-16z+600 - \lambda \big[4x^2 + y^2 + 4z^2 -16 \big] $$
+
+Partial Derivatives Set Equal to Zero
+
+$$\frac{\partial L}{\partial x}=16x-8\lambda x=0$$
+
+$$\Rightarrow 16x=8 \lambda x$$
+
+$$\Rightarrow \lambda =2$$
+$$\frac{\partial L}{\partial y}=4z-2\lambda y=0$$
+
+$$\Rightarrow z = y$$
+
+
+
+$$\frac{\partial L}{\partial z}=4y-16-8\lambda z=0$$
+
+
+$$\Rightarrow y = \frac{-4}{3}$$
+
+We also have z = y. Therefore $z = \frac {-4}{3}$.
+
+$$\frac{\partial L}{\partial \lambda}=-4x^2-y^2-4z^2+16=0$$
+
+$$\Rightarrow x = \frac{4}{3}$$
+
+
+
+ 
+ Therefore, the hottest point $(x,y,z)$ is: $( \frac {4}{3}, \frac{-4}{3}, \frac{-4}{3})$.
